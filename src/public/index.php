@@ -65,6 +65,20 @@ $app->put('/entrega/{numeroPedido}', function(Request $request, Response $respon
 
 });
 
+$app->delete('/entrega/{numeroPedido}', function(Request $request, Response $response) {
+    $numeroPedido = $request->getAttribute('numeroPedido');
+    $entrega = $this->db->entrega("numeroPedido=?",$numeroPedido)->fetch();
+
+    if(empty($entrega)){
+        return $response->withJson("404 NOT FOUND", 404);
+    }
+
+    if ( $this->db->entrega("numeroPedido=?",$numeroPedido)->delete() == 0) {
+        return $response->withStatus(500);
+    }
+
+    return $response->withJson("Deleted", 200);
+});
 
 $app->run();
 
